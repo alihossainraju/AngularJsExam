@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div ng-app="my-tourists" class="container" ng-controller="tourist-controller">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align:center">
+            Tourist Information
+        </div>
+        <div class="panel-body">
+            <button type="button" class="btn btn-info" data-target="#AddNew" data-toggle="modal"  style="background-color:green">
+                Add Tourist
+            </button>
+            <br />
+        </div>
+
+        <table class="table table-bordered table-striped table-hover table-condensed table-responsive">
+            <thead style="background-color:aliceblue;">
+                <tr>
+                    <th  style="text-align:center"> Tourist ID</th>
+                    <th style="text-align:center"> Tourist Name</th>
+                    <th style="text-align:center">Email </th>
+                    <th style="text-align:center">Address</th>
+                    <th style="text-align:center">Contact</th>
+                    <th style="text-align:center"> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="tou in Tourists| filter:search" style="text-align:center">
+                    <td> {{tou.TouristID}}</td>
+                    <td> {{tou.Name}} </td>
+                    <td>{{tou.Email}}</td>
+                    <td>{{tou.Address}}</td>
+                    <td>{{tou.Contact}}</td>
+                    <td style="width:200px;">
+                        <a href="#"
+                           class="btn btn-info"
+                           data-toggle="modal"
+                           data-target="#Update"
+                           ng-click="getForUpdate(tou)">
+                            Update
+                        </a>
+                        <a href="#" class="btn btn-danger"
+                           id="btnDelete"
+                           data-toggle="modal"
+                           data-target="#deleteDialog"
+                           ng-click="getForDelete(tou)">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <span><b>Searching here..... </b> </span><input type="text" ng-model="search" class="form-control" style="border: 2px solid black" />
+
+    <div class="modal" id="AddNew" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" style="background-color:Red">&times;</button>
+                    <h3 class="text-info">Add Tourist</h3>
+                </div>
+                <div class="modal-body" style="margin-left:20px">
+
+                    <form class="form-horizontal" name="AddNewForm">
+                        <div class="form-group">
+                            <input class="form-control" readonly="readonly" name="TouNo" ng-model="TouNo" type="hidden" placeholder="Tourist Number" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> Tourist Name</label>
+                            <input class="form-control" name="Name" ng-model="Name" type="text" placeholder="Tourist Name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> Email</label>
+                            <input class="form-control" name="Email" ng-model="Email" type="email" placeholder="Email address" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> Address</label>
+                            <input class="form-control" name="Address" ng-model="Address" type="text" placeholder="Address" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> Contact</label>
+                            <input class="form-control" name="Contact" ng-model="Contact" type="text" placeholder="Contact" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnSave" data-dismiss="modal" ng-click="save()">Submit</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="resetSave()">Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="Update" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="text-info">Update Tourist</h3>
+                </div>
+                <div class="modal-body" style="margin-left:20px">
+
+                    <form class="form-horizontal" name="UpdateTouristForm">
+                        <div class="form-group">
+                            <input class="form-control" readonly="readonly" name="TouNo" ng-model="UpdateTouNo" type="hidden" placeholder="Tourist Number" />
+                        </div>
+                        <div class="form-group">
+                            <label class="text-info"> Tourist Name</label>
+                            <input class="form-control" name="Name" ng-model="UpdateName" type="text" placeholder="Tourist Name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="text-info"> Email</label>
+                            <input class="form-control" name="Email" ng-model="UpdateEmail" type="email" placeholder="Email address" />
+                        </div>
+                        <div class="form-group">
+                            <label class="text-info"> Address</label>
+                            <input class="form-control" name="Address" ng-model="UpdateAddress" type="text" placeholder="Address" />
+                        </div>
+                        <div class="form-group">
+                            <label class="text-info"> Contact</label>
+                            <input class="form-control" name="Contact" ng-model="UpdateContact" type="text" placeholder="Contact" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnUpdate" data-dismiss="modal" ng-click="update()">
+                        Update
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" role="dialog" id="deleteDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="text-info">Are you confirm to delete the record????</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <p>Tourist ID : {{UpdateTouNo}}</p>
+                        <p>Tourist Name : {{UpdateName}}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="delete(UpdateTouNo)">Delete Record</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Scripts/Custom/Module.js"></script>
+    <script src="~/Scripts/Custom/Service.js"></script>
+    <script src="~/Scripts/Custom/Controller.js"></script>
+}
+
